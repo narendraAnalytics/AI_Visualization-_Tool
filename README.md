@@ -1,6 +1,6 @@
 # AI-Powered Data Visualization Tool
 
-(aidashboard/images/image_robots.webp)
+![Dashboard Image](aidashboard/images/image_robots.webp)
 
 ## Overview
 
