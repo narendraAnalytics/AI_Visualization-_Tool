@@ -90,7 +90,7 @@ if uploaded_file:
         """)
 
         st.write("#### Heatmap:")
-        correlation = df.select_dtypes(include(['float64', 'int64'])).corr()
+        correlation = df.select_dtypes(include=['float64', 'int64']).corr()
         fig, ax = plt.subplots(figsize=(10, 8))  # Adjust the height of the heatmap
         sns.heatmap(correlation, annot=True, cmap='coolwarm', ax=ax)
         st.pyplot(fig)
