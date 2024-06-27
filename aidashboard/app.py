@@ -7,6 +7,42 @@ import plotly.express as px
 # Page configuration
 st.set_page_config(page_title="AI-Powered Data Visualization Tool", layout="wide")
 
+# Custom CSS for hover effects and centering content
+st.markdown(
+    """
+    <style>
+    .stTabs button {
+        flex: 1;
+        margin-right: 5px;
+        padding: 10px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .stTabs button:hover {
+        background-color: #ddd;
+        color: #000;
+    }
+    .stTabs div {
+        display: flex;
+        justify-content: space-between;
+    }
+    .center-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        width: 100%;
+    }
+    .content {
+        max-width: 800px;
+        margin: auto;
+    }
+    </style>
+    """, unsafe_allow_html=True
+)
+
 # Title and Note
 st.title("AI-Powered Data Visualization Tool")
 st.markdown("""
@@ -26,8 +62,13 @@ if uploaded_file:
     st.write("### Data Preview:")
     st.write(df.head())
 
-    # Layout
-    tab1, tab2, tab3, tab4 = st.tabs(["Univariate Analysis", "Bivariate Analysis", "Multivariate Analysis", "Top 5 Market Share"])
+    # Layout with standard Streamlit tabs
+    tab1, tab2, tab3, tab4 = st.tabs([
+        "Univariate Analysis",
+        "Bivariate Analysis",
+        "Multivariate Analysis",
+        "Top 5 Market Share"
+    ])
 
     with tab1:
         st.header("Univariate Analysis")
@@ -39,17 +80,17 @@ if uploaded_file:
             st.write(df[selected_column].describe())
 
             st.write("#### Distribution Plot:")
-            with st.expander("View Distribution Plot", expanded=True):
+            with st.container():
                 fig, ax = plt.subplots(figsize=(10, 4))  # Set the height of the plot
                 sns.histplot(df[selected_column], bins=30, kde=True, ax=ax)
-                st.pyplot(fig)
-                
-                # Dynamic description
-                st.markdown(f"""
-                **Description**:
-                This distribution plot shows the frequency distribution of the selected numeric column **{selected_column}**.
-                The histogram bins are set to 30, and a KDE (Kernel Density Estimate) is overlaid to show the probability density.
-                """)
+                st.pyplot(fig, use_container_width=True)
+            
+            # Dynamic description
+            st.markdown(f"""
+            **Description**:
+            This distribution plot shows the frequency distribution of the selected numeric column **{selected_column}**.
+            The histogram bins are set to 30, and a KDE (Kernel Density Estimate) is overlaid to show the probability density.
+            """)
 
     with tab2:
         st.header("Bivariate Analysis")
@@ -59,11 +100,12 @@ if uploaded_file:
 
         if x_column and y_column:
             st.write("#### Scatter Plot:")
-            fig = px.scatter(df, x=x_column, y=y_column, 
-                             title="Scatter Plot", 
-                             template="plotly_dark", 
-                             hover_data=[x_column, y_column])
-            st.plotly_chart(fig)
+            with st.container():
+                fig = px.scatter(df, x=x_column, y=y_column, 
+                                 title="Scatter Plot", 
+                                 template="plotly_dark", 
+                                 hover_data=[x_column, y_column])
+                st.plotly_chart(fig, use_container_width=True)
 
             # Dynamic description
             st.markdown(f"""
@@ -75,8 +117,9 @@ if uploaded_file:
     with tab3:
         st.header("Multivariate Analysis")
         st.write("#### Pairplot:")
-        fig = sns.pairplot(df.select_dtypes(include=['float64', 'int64']))
-        st.pyplot(fig)
+        with st.container():
+            fig = sns.pairplot(df.select_dtypes(include=['float64', 'int64']))
+            st.pyplot(fig)
 
         # Dynamic description for Pairplot
         st.markdown("""
@@ -86,10 +129,11 @@ if uploaded_file:
         """)
 
         st.write("#### Heatmap:")
-        correlation = df.select_dtypes(include=['float64', 'int64']).corr()
-        fig, ax = plt.subplots(figsize=(10, 8))  # Adjust the height of the heatmap
-        sns.heatmap(correlation, annot=True, cmap='coolwarm', ax=ax)
-        st.pyplot(fig)
+        with st.container():
+            correlation = df.select_dtypes(include=['float64', 'int64']).corr()
+            fig, ax = plt.subplots(figsize=(10, 8))  # Adjust the height of the heatmap
+            sns.heatmap(correlation, annot=True, cmap='coolwarm', ax=ax)
+            st.pyplot(fig, use_container_width=True)
 
         # Dynamic description for Heatmap
         st.markdown("""
@@ -104,13 +148,15 @@ if uploaded_file:
         selected_category = st.selectbox("Select category for Market Share", categorical_columns)
 
         if selected_category:
-            top_5 = df[selected_category].value_counts().head(5)
-            fig = px.pie(top_5, values=top_5.values, names=top_5.index, 
-                         title='Top 5 Market Share', 
-                         template="plotly_dark", 
-                         hover_data=[top_5.values],
-                         color_discrete_sequence=px.colors.sequential.RdBu)
-            st.plotly_chart(fig)
+            with st.container():
+                top_5 = df[selected_category].value_counts().head(5)
+                fig = px.pie(top_5, values=top_5.values, names=top_5.index, 
+                             title='Top 5 Market Share', 
+                             template="plotly_dark", 
+                             hover_data=[top_5.values],
+                             color_discrete_sequence=px.colors.sequential.RdBu)
+                fig.update_traces(textinfo='percent+label+value')
+                st.plotly_chart(fig, use_container_width=True)
 
             # Dynamic description
             st.markdown(f"""
