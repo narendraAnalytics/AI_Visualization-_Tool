@@ -12,6 +12,7 @@ This project is an AI-powered data visualization tool built using Streamlit. The
 - **Univariate Analysis**: Provides summary statistics and distribution plots.
 - **Bivariate Analysis**: Generates scatter plots to examine relationships between two variables.
 - **Multivariate Analysis**: Creates pair plots and heatmaps for in-depth data exploration.
+- **Top 5 Market Share**: Select a categorical column to view a pie chart of the top 5 categories.
 
 ## Getting Started
 
@@ -30,3 +31,8 @@ This project is an AI-powered data visualization tool built using Streamlit. The
    ```sh
    git clone https://github.com/narendraAnalytics/AI_Visualization-_Tool.git
    cd aidashboard
+
+
+## Contact
+
+If you have any questions or suggestions, please feel free to contact me at [narendra.insights@gmail.com](mailto:narendra.insights@gmail.com).
